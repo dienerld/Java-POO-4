@@ -32,6 +32,7 @@ public class Main {
     }
 
     public static void managerClient() {
+        var cpf =  pegarCPF();
         while (true){
             switch (Screen.getInput("""
                     1 - Abrir conta
@@ -42,17 +43,20 @@ public class Main {
                     """)){
                 case "1" -> {
                     var nome =  Screen.getInput("Nome: ");
-                    var cpf =  Screen.getInput("cpf: ");
                     var cliente = new Cliente(nome,cpf, LocalDate.of(1000,1,1));
                     banco.abrirConta(cliente, Cargo.GERENTE_CORRENTE);
                 }
                 case "2" ->{
-                    var cpf = Screen.getInput("Informe seu cpf: ");
                     banco.verificaSaldo(cpf);
+                }
+                case "3" -> {
+                    var tipoConta = buscarTipoConta();
+                    var valor = Double.parseDouble(Screen.getInput("Informe o valor a ser sacado: "));
+                    banco.sacar(tipoConta, cpf, valor);
+
                 }
                 case "4" ->{
                     var tipoConta = buscarTipoConta();
-                    var cpf = Screen.getInput("Informe seu cpf: ");
                     var valor = Double.parseDouble(Screen.getInput("Informe o valor a depositar: "));
                     banco.depositar(tipoConta, cpf, valor);
 
@@ -69,5 +73,9 @@ public class Main {
     public static TipoConta buscarTipoConta() {
         var type = Screen.getInput("Informe qual tipo de conta(1 - Corrente | 2 - Poupança): ");
         return type.equals("1") ? TipoConta.CORRENTE : TipoConta.POUPANCA;
+    }
+
+    public static String pegarCPF(){
+        return Screen.getInput("Informe seu cpf: ");
     }
 }

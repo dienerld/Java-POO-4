@@ -46,4 +46,12 @@ public class Cliente extends Pessoa {
             contaPoupanca.depositar(valor);
         }
     }
+
+    public void sacar(TipoConta tipo, double valor) {
+        if(tipo.equals(TipoConta.CORRENTE)) {
+            contaCorrente.sacar(valor);
+        } else {
+            contaPoupanca.sacar(valor);
+        }
+    }
 }

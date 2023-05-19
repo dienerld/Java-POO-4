@@ -7,6 +7,7 @@ public class ContaCorrente extends Conta {
     private double limiteEmprestimo;
     private double chequeEspecial;
     private double taxa = 2.50;
+    private double jurosChequeEsp = 0.2;
 
     public ContaCorrente() {
         limiteEmprestimo = 5000.00;
@@ -20,14 +21,27 @@ public class ContaCorrente extends Conta {
 
     @Override
     public void sacar(double valor) {
-        if (valor >= 10) {
-            saldo -= valor;
-            saldo -= taxa;
-            Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
-        } else {
-            Screen.showMessage("Valor mínimo de saque é R$ 10 reais.");
 
+        if (valor < 10) {
+            Screen.showMessage("Valor mínimo de saque é R$ 10 reais.");
+            return;
         }
+        if(valor > saldo + chequeEspecial ){
+                Screen.showMessage("Não é possível fazer o saque. Valor está acima do Cheque Especial");
+                return;
+            }
+
+        saldo -= taxa;
+        if(valor > saldo){
+           var valorCheque = valor - saldo;
+           saldo = 0;
+           chequeEspecial -= valorCheque * jurosChequeEsp;
+           chequeEspecial -= valorCheque;
+            Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em cheque especial: R$" + chequeEspecial);
+           return;
+        }
+            saldo -= valor;
+            Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
 
     }
 

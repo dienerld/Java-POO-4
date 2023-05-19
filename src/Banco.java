@@ -18,6 +18,10 @@ public class Banco {
 
         Gerente gerente1 = new Gerente("Diener", "1234", LocalDate.of(2000,1,1), Cargo.GERENTE_CORRENTE);
         Gerente gerente2 = new Gerente("Pedro", "1234", LocalDate.of(2001,1,1), Cargo.GERENTE_CORRENTE);
+        Cliente cliente1 = new Cliente("Maria", "m1", LocalDate.of(2001,1,1));
+
+        clientes.add(cliente1);
+        gerente1.criarConta(cliente1, Cargo.GERENTE_CORRENTE);
         gerentes.add(gerente1);
         gerentes.add(gerente2);
     }
@@ -44,20 +48,34 @@ public class Banco {
 
 
     public void verificaSaldo(String cpf) {
-        for (Cliente cliente: clientes) {
-            if (cliente.getCpf().equals(cpf)){
+        var cliente = buscarCliente(cpf);
+        if (cliente != null) {
                 Screen.showMessage("Saldo: R$" + cliente.getConta().getSaldo());
             }else {
                 Screen.showMessage("CPF invalido!");
             }
-        }
     }
 
     public void depositar(TipoConta tipo, String cpf, double valor) {
-        for(Cliente cliente : clientes) {
-            if(cliente.getCpf().equals(cpf)){
+        var cliente = buscarCliente(cpf);
+        if (cliente != null) {
                 cliente.depositar(tipo, valor);
             }
+    }
+
+    public void sacar(TipoConta tipo, String cpf, double valor) {
+           var cliente = buscarCliente(cpf);
+            if (cliente != null) {
+                cliente.sacar(tipo, valor);
+            }
+    }
+
+    private Cliente buscarCliente(String cpf){
+        for(Cliente cliente : clientes) {
+            if(cliente.getCpf().equalsIgnoreCase(cpf)){
+                return cliente;
+            }
         }
+        return null;
     }
 }
