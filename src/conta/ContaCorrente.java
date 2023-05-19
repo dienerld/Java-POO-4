@@ -52,5 +52,14 @@ public class ContaCorrente extends Conta {
 
     }
 
+    public void addEmprestimo(double valor){
+        if(valor > limiteEmprestimo){
+            Screen.showMessage("O valor está acima do limite de empréstimo");
+        }else {
+            limiteEmprestimo -= valor;
+            saldo += valor;
+        }
+    }
+
 
 }

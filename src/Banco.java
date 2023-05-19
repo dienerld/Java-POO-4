@@ -27,23 +27,11 @@ public class Banco {
     }
 
 
-
     public void abrirConta(Cliente cliente, Cargo tipoConta) {
         var gerente = selecionaGerente(tipoConta);
         gerente.criarConta(cliente, tipoConta);
         clientes.add(cliente);
         System.out.println(cliente.getCpf());
-    }
-
-    private Gerente selecionaGerente(Cargo tipoConta) {
-        var gerentesFiltrado = gerentes.stream()
-                .filter((Gerente g) -> g.getCargo().equals(tipoConta))
-                .toList();
-
-        int index = (int) (Math.random() * gerentesFiltrado.size());
-
-        return gerentesFiltrado.get(index);
-
     }
 
 
@@ -70,6 +58,13 @@ public class Banco {
             }
     }
 
+    public void fazerEmprestimo(String cpf, String nomeGerente, double valor){
+       var gerenteConta = buscarGerente(nomeGerente);
+       var cliente = buscarCliente(cpf);
+       var numConta = cliente.getConta().getNumConta();
+       gerenteConta.fazerEmprestimo(numConta, valor);
+    }
+
     private Cliente buscarCliente(String cpf){
         for(Cliente cliente : clientes) {
             if(cliente.getCpf().equalsIgnoreCase(cpf)){
@@ -78,4 +73,25 @@ public class Banco {
         }
         return null;
     }
+    private Gerente buscarGerente(String nome){
+        for(Gerente g : gerentes) {
+            if(g.getNome().equalsIgnoreCase(nome)){
+                return g;
+            }
+        }
+        return null;
+    }
+
+    private Gerente selecionaGerente(Cargo tipoConta) {
+        var gerentesFiltrado = gerentes.stream()
+                .filter((Gerente g) -> g.getCargo().equals(tipoConta))
+                .toList();
+
+        int index = (int) (Math.random() * gerentesFiltrado.size());
+
+        return gerentesFiltrado.get(index);
+
+    }
+
+
 }

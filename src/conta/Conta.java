@@ -34,4 +34,10 @@ public abstract class Conta {
     public abstract void depositar(double valor);
 
     public double getSaldo(){return saldo;}
+
+    public String getNumConta() {
+        return numConta;
+    }
+
+
 }

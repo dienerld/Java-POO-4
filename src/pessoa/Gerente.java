@@ -30,4 +30,16 @@ public class Gerente extends Pessoa{
         System.out.println(conta);
         Screen.showMessage("Conta criada com sucesso!! \n"+ conta.toString());
     }
+
+    public void fazerEmprestimo(String numConta, double valor){
+        for(Conta c : contas){
+            if(c.getNumConta().equals(numConta)){
+              var cc = (ContaCorrente)c;
+              cc.addEmprestimo(valor);
+            }
+        }
+
+    }
+
+
 }

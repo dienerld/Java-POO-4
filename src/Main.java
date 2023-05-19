@@ -39,6 +39,7 @@ public class Main {
                     2 - Verificar Saldo
                     3 - Sacar
                     4 - Depositar
+                    5 - Pedir Empréstimo
                     
                     """)){
                 case "1" -> {
@@ -61,6 +62,12 @@ public class Main {
                     banco.depositar(tipoConta, cpf, valor);
 
                 }
+                case "5" -> {
+                    var nomeGerente = Screen.getInput("Informe o nome do Gerente:");
+                    var valorEmprestimo = Double.parseDouble(Screen.getInput("Informe o valor do empréstimo:"));
+
+                }
+
 
 
                 default -> System.exit(0);
