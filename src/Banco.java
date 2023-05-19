@@ -1,3 +1,4 @@
+import conta.TipoConta;
 import pessoa.Cargo;
 import pessoa.Cliente;
 import pessoa.Gerente;
@@ -25,7 +26,7 @@ public class Banco {
 
     public void abrirConta(Cliente cliente, Cargo tipoConta) {
         var gerente = selecionaGerente(tipoConta);
-        gerente.abrirConta(cliente, tipoConta);
+        gerente.criarConta(cliente, tipoConta);
         clientes.add(cliente);
         System.out.println(cliente.getCpf());
     }
@@ -48,6 +49,14 @@ public class Banco {
                 Screen.showMessage("Saldo: R$" + cliente.getConta().getSaldo());
             }else {
                 Screen.showMessage("CPF invalido!");
+            }
+        }
+    }
+
+    public void depositar(TipoConta tipo, String cpf, double valor) {
+        for(Cliente cliente : clientes) {
+            if(cliente.getCpf().equals(cpf)){
+                cliente.depositar(tipo, valor);
             }
         }
     }

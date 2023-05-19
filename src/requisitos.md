@@ -3,14 +3,14 @@
  - [x] deposito
  - [x] transferência
  - [x] saldo inicial em 0
- - [ ] gerente aleatório
+ - [x] gerente aleatório
  - [x] idade minima 18 anos
  - [x] mínimo saque R$ 10
 
 
 ### corrente
  - [ ] empréstimo
- - [ ] taxa de serviço
+ - [x] taxa de serviço
  - [ ] limite de 5 mil empréstimo
  - [ ] cheque especial - inicial 500
  - [ ] juros cheque especial

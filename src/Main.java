@@ -1,3 +1,4 @@
+import conta.TipoConta;
 import pessoa.Cargo;
 import pessoa.Cliente;
 import screen.Screen;
@@ -49,6 +50,15 @@ public class Main {
                     var cpf = Screen.getInput("Informe seu cpf: ");
                     banco.verificaSaldo(cpf);
                 }
+                case "4" ->{
+                    var tipoConta = buscarTipoConta();
+                    var cpf = Screen.getInput("Informe seu cpf: ");
+                    var valor = Double.parseDouble(Screen.getInput("Informe o valor a depositar: "));
+                    banco.depositar(tipoConta, cpf, valor);
+
+                }
+
+
                 default -> System.exit(0);
 
             }
@@ -56,5 +66,8 @@ public class Main {
         }
 
     }
-
+    public static TipoConta buscarTipoConta() {
+        var type = Screen.getInput("Informe qual tipo de conta(1 - Corrente | 2 - Poupança): ");
+        return type.equals("1") ? TipoConta.CORRENTE : TipoConta.POUPANCA;
+    }
 }

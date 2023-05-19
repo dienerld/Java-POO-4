@@ -23,10 +23,10 @@ public class Gerente extends Pessoa{
         return cargo;
     }
 
-    public void abrirConta(Cliente cliente, Cargo tipoConta) {
+    public void criarConta(Cliente cliente, Cargo tipoConta) {
         var conta = new ContaCorrente();
         contas.add(conta);
-        cliente.criarConta(conta);
+        cliente.salvarConta(conta);
         System.out.println(conta);
         Screen.showMessage("Conta criada com sucesso!! \n"+ conta.toString());
     }

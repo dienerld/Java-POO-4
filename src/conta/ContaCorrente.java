@@ -29,13 +29,12 @@ public class ContaCorrente extends Conta {
 
         }
 
-
     }
 
     @Override
     public void depositar(double valor) {
         saldo += valor;
-        Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
+        Screen.showMessage("Valor depositado: R$" + valor + "\nSaldo em conta: R$" + saldo);
 
     }
 
