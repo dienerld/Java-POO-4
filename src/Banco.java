@@ -1,4 +1,5 @@
 import conta.Conta;
+import conta.ContaCorrente;
 import conta.TipoConta;
 import pessoa.Cargo;
 import pessoa.Cliente;
@@ -36,10 +37,15 @@ public class Banco {
     }
 
 
-    public void verificaSaldo(String cpf) {
+    public void verificaSaldo(String cpf, TipoConta conta) {
         var cliente = buscarCliente(cpf);
+
         if (cliente != null) {
-                Screen.showMessage("Saldo: R$" + cliente.getConta().getSaldo());
+            var contaCliente = cliente.getConta(conta);
+            if(contaCliente != null)
+                Screen.showMessage("Saldo: R$" + contaCliente.getSaldo());
+            else
+                Screen.showMessage("Conta não existe!");
             }else {
                 Screen.showMessage("CPF invalido!");
             }
@@ -70,7 +76,7 @@ public class Banco {
             Screen.showMessage("Não existe este cliente.");
             return;
         }
-       var numConta = cliente.getConta().getNumConta();
+       var numConta = cliente.getConta(TipoConta.CORRENTE).getNumConta();
         if(numConta == null) {
             Screen.showMessage("Não existe o número da conta informado.");
             return;

@@ -19,9 +19,11 @@ public class Main {
                                        
                     1 - Gerente
                     2 - Cliente
+                    3 - Criar Conta
                     """)) {
                 case "1" -> managerBank();
                 case "2" -> managerClient();
+                case "3" -> addConta();
                 default -> System.exit(0);
             }
         }
@@ -47,7 +49,7 @@ public class Main {
                     banco.addConta(cpf, tipoConta);
                 }
                 case "2" ->{
-                    banco.verificaSaldo(cpf);
+                    banco.verificaSaldo(cpf, buscarTipoConta());
                 }
                 case "3" -> {
                     var tipoConta = buscarTipoConta();
@@ -75,11 +77,20 @@ public class Main {
         }
 
     }
+
+
     public static TipoConta buscarTipoConta() {
         var type = Screen.getInput("Informe qual tipo de conta(1 - Corrente | 2 - Poupança): ");
         return type.equals("1") ? TipoConta.CORRENTE : TipoConta.POUPANCA;
     }
 
+    public static void addConta(){
+        var nome = Screen.getInput("Informe seu nome:");
+        var cpf = pegarCPF();
+        var tipoConta = buscarTipoConta();
+        banco.abrirConta(new Cliente(nome,cpf,LocalDate.of(1989,2,15)),tipoConta);
+
+    }
     public static String pegarCPF(){
         return Screen.getInput("Informe seu cpf: ");
     }

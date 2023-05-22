@@ -27,8 +27,9 @@ public class Cliente extends Pessoa {
 
     public String getCpf(){ return cpf; }
 
-    public Conta getConta(){
-        return contaCorrente;
+    public Conta getConta(TipoConta conta){
+        if(conta.equals(TipoConta.CORRENTE)) return contaCorrente;
+        return contaPoupanca;
     }
 
     protected void salvarConta(ContaCorrente contaCorrente){
