@@ -1,9 +1,6 @@
 package pessoa;
 
-import conta.Conta;
-import conta.ContaCorrente;
-import conta.ContaPoupanca;
-import conta.TipoConta;
+import conta.*;
 import screen.Screen;
 
 import java.time.LocalDate;
@@ -44,8 +41,8 @@ public class Gerente extends Pessoa{
     public void fazerEmprestimo(String numConta, double valor){
         for(Conta c : contas){
             if(c.getNumConta().equals(numConta)){
-              var cc = (ContaCorrente)c;
-              cc.addEmprestimo(valor);
+              var contaComEmprestimo = (Emprestimo)c;
+              contaComEmprestimo.addEmprestimo(valor);
               return;
             }
         }

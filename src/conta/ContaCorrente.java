@@ -2,7 +2,7 @@ package conta;
 
 import screen.Screen;
 
-public class ContaCorrente extends Conta {
+public class ContaCorrente extends Conta implements Emprestimo{
 
     private double limiteEmprestimo;
     private double chequeEspecial;
@@ -66,7 +66,9 @@ public class ContaCorrente extends Conta {
 
     }
 
-    public void addEmprestimo(double valor){
+
+    @Override
+    public void addEmprestimo(double valor) {
         if(valor > limiteEmprestimo){
             Screen.showMessage("O valor está acima do limite de empréstimo");
         }else {
@@ -74,6 +76,12 @@ public class ContaCorrente extends Conta {
             saldo += valor;
             Screen.showMessage("Empréstimo realizado com sucesso.");
         }
+
+    }
+
+    @Override
+    public void pagarEmprestimo(double valor) {
+
     }
 
 
