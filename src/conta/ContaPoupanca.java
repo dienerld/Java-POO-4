@@ -27,4 +27,9 @@ public class ContaPoupanca  extends Conta{
         saldo += adicionalJuros;
         Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Conta poupança\nNúmero: %s\nAgência: %s\nSaldo: %.2f", this.numConta, this.agencia, this.saldo);
+    }
 }

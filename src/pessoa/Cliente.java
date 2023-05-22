@@ -38,6 +38,13 @@ public class Cliente extends Pessoa {
             Screen.showMessage("Conta já cadastrada.");
         }
     }
+    protected void salvarConta(ContaPoupanca contaPoupanca){
+        if (this.contaPoupanca == null){
+            this.contaPoupanca = contaPoupanca;
+        }else{
+            Screen.showMessage("Conta já cadastrada.");
+        }
+    }
 
     public void depositar(TipoConta tipoConta, double valor) {
         if(tipoConta.equals(TipoConta.CORRENTE)) {

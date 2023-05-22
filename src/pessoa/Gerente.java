@@ -2,6 +2,8 @@ package pessoa;
 
 import conta.Conta;
 import conta.ContaCorrente;
+import conta.ContaPoupanca;
+import conta.TipoConta;
 import screen.Screen;
 
 import java.time.LocalDate;
@@ -23,11 +25,19 @@ public class Gerente extends Pessoa{
         return cargo;
     }
 
-    public void criarConta(Cliente cliente, Cargo tipoConta) {
-        var conta = new ContaCorrente();
+    public void criarConta(Cliente cliente, TipoConta tipo) {
+        Conta conta;
+        if(tipo.equals(TipoConta.CORRENTE)) {
+            conta = new ContaCorrente();
+            cliente.salvarConta((ContaCorrente)conta);
+        } else {
+            conta = new ContaPoupanca();
+            cliente.salvarConta((ContaPoupanca)conta);
+        }
         contas.add(conta);
-        cliente.salvarConta(conta);
+
         System.out.println(conta);
+        System.out.println(this.nome);
         Screen.showMessage("Conta criada com sucesso!! \n"+ conta.toString());
     }
 
@@ -36,8 +46,10 @@ public class Gerente extends Pessoa{
             if(c.getNumConta().equals(numConta)){
               var cc = (ContaCorrente)c;
               cc.addEmprestimo(valor);
+              return;
             }
         }
+        Screen.showMessage("O número da conta informado não é administrado por este gerente.");
 
     }
 

@@ -35,7 +35,7 @@ public class Main {
         var cpf =  pegarCPF();
         while (true){
             switch (Screen.getInput("""
-                    1 - Abrir conta
+                    1 - Adicionar conta
                     2 - Verificar Saldo
                     3 - Sacar
                     4 - Depositar
@@ -43,9 +43,8 @@ public class Main {
                     
                     """)){
                 case "1" -> {
-                    var nome =  Screen.getInput("Nome: ");
-                    var cliente = new Cliente(nome,cpf, LocalDate.of(1000,1,1));
-                    banco.abrirConta(cliente, Cargo.GERENTE_CORRENTE);
+                    var tipoConta = buscarTipoConta();
+                    banco.addConta(cpf, tipoConta);
                 }
                 case "2" ->{
                     banco.verificaSaldo(cpf);
@@ -65,10 +64,9 @@ public class Main {
                 case "5" -> {
                     var nomeGerente = Screen.getInput("Informe o nome do Gerente:");
                     var valorEmprestimo = Double.parseDouble(Screen.getInput("Informe o valor do empréstimo:"));
+                    banco.fazerEmprestimo(cpf, nomeGerente, valorEmprestimo);
 
                 }
-
-
 
                 default -> System.exit(0);
 
