@@ -1,8 +1,10 @@
 package conta;
 
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorInvalidoException;
 import screen.Screen;
 
-public class ContaCorrente extends Conta implements Emprestimo{
+public class ContaCorrente extends Conta implements Emprestimo {
 
     private double limiteEmprestimo;
     private double chequeEspecial;
@@ -24,34 +26,32 @@ public class ContaCorrente extends Conta implements Emprestimo{
     public void sacar(double valor) {
 
         if (valor < 10) {
-            Screen.showMessage("Valor mínimo de saque é R$ 10 reais.");
-            return;
+            throw new ValorInvalidoException("Valor do saque deve ser maior que 10 reais");
         }
-        if(valor > saldo + chequeEspecial ){
-                Screen.showMessage("Não é possível fazer o saque. Valor está acima do Cheque Especial");
-                return;
+        if (valor > saldo + chequeEspecial) {
+            throw new SaldoInsuficienteException("Valor do saque é maior que saldo e limite de chegue especial");
         }
 
         saldo -= taxa;
-        if(valor > saldo){
-           var valorCheque = valor - saldo;
-           saldo = 0;
-           chequeEspecial -= valorCheque * jurosChequeEsp;
-           chequeEspecial -= valorCheque;
+        if (valor > saldo) {
+            var valorCheque = valor - saldo;
+            saldo = 0;
+            chequeEspecial -= valorCheque * jurosChequeEsp;
+            chequeEspecial -= valorCheque;
             Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em cheque especial: R$" + chequeEspecial);
-           return;
+            return;
         }
-            saldo -= valor;
-            Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
+        saldo -= valor;
+        Screen.showMessage("Valor sacado: R$" + valor + "\nSaldo em conta: R$" + saldo);
 
     }
 
     @Override
     public void depositar(double valor) {
         var valorDepositado = valor;
-        if(chequeEspecial < limiteChequeEspecial) {
+        if (chequeEspecial < limiteChequeEspecial) {
             var valorGasto = limiteChequeEspecial - chequeEspecial;
-            if(valor <= valorGasto) {
+            if (valor <= valorGasto) {
                 chequeEspecial += valor;
                 Screen.showMessage("Valor depositado R$ " + valor + "\nSaldo cheque especial: R$ " + chequeEspecial);
                 return;
@@ -69,9 +69,9 @@ public class ContaCorrente extends Conta implements Emprestimo{
 
     @Override
     public void addEmprestimo(double valor) {
-        if(valor > limiteEmprestimo){
+        if (valor > limiteEmprestimo) {
             Screen.showMessage("O valor está acima do limite de empréstimo");
-        }else {
+        } else {
             limiteEmprestimo -= valor;
             saldo += valor;
             Screen.showMessage("Empréstimo realizado com sucesso.");

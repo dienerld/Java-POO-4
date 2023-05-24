@@ -1,4 +1,7 @@
 import conta.TipoConta;
+import exceptions.NotFoundUserException;
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorInvalidoException;
 import pessoa.Cargo;
 import pessoa.Cliente;
 import screen.Screen;
@@ -28,52 +31,58 @@ public class Main {
             }
         }
     }
+
     public static void managerBank() {
         Screen.showMessage("Gerenciando bank");
 
     }
 
     public static void managerClient() {
-        var cpf =  pegarCPF();
-        while (true){
-            switch (Screen.getInput("""
-                    1 - Adicionar conta
-                    2 - Verificar Saldo
-                    3 - Sacar
-                    4 - Depositar
-                    5 - Pedir Empréstimo
-                    
-                    """)){
-                case "1" -> {
-                    var tipoConta = buscarTipoConta();
-                    banco.addConta(cpf, tipoConta);
-                }
-                case "2" ->{
-                    banco.verificaSaldo(cpf, buscarTipoConta());
-                }
-                case "3" -> {
-                    var tipoConta = buscarTipoConta();
-                    var valor = Double.parseDouble(Screen.getInput("Informe o valor a ser sacado: "));
-                    banco.sacar(tipoConta, cpf, valor);
+        try {
+            var cpf = pegarCPF();
+            while (true) {
+                switch (Screen.getInput("""
+                        1 - Adicionar conta
+                        2 - Verificar Saldo
+                        3 - Sacar
+                        4 - Depositar
+                        5 - Pedir Empréstimo
+                                            
+                        """)) {
+                    case "1" -> {
+                        var tipoConta = buscarTipoConta();
+                        banco.addConta(cpf, tipoConta);
+                    }
+                    case "2" -> {
+                        banco.verificaSaldo(cpf, buscarTipoConta());
+                    }
+                    case "3" -> {
+                        var tipoConta = buscarTipoConta();
+                        var valor = Double.parseDouble(Screen.getInput("Informe o valor a ser sacado: "));
+                        banco.sacar(tipoConta, cpf, valor);
+
+                    }
+                    case "4" -> {
+                        var tipoConta = buscarTipoConta();
+                        var valor = Double.parseDouble(Screen.getInput("Informe o valor a depositar: "));
+                        banco.depositar(tipoConta, cpf, valor);
+
+                    }
+                    case "5" -> {
+                        var nomeGerente = Screen.getInput("Informe o nome do Gerente:");
+                        var valorEmprestimo = Double.parseDouble(Screen.getInput("Informe o valor do empréstimo:"));
+                        banco.fazerEmprestimo(cpf, nomeGerente, valorEmprestimo);
+
+                    }
+
+                    default -> System.exit(0);
 
                 }
-                case "4" ->{
-                    var tipoConta = buscarTipoConta();
-                    var valor = Double.parseDouble(Screen.getInput("Informe o valor a depositar: "));
-                    banco.depositar(tipoConta, cpf, valor);
-
-                }
-                case "5" -> {
-                    var nomeGerente = Screen.getInput("Informe o nome do Gerente:");
-                    var valorEmprestimo = Double.parseDouble(Screen.getInput("Informe o valor do empréstimo:"));
-                    banco.fazerEmprestimo(cpf, nomeGerente, valorEmprestimo);
-
-                }
-
-                default -> System.exit(0);
 
             }
-
+        } catch (NotFoundUserException | ValorInvalidoException | SaldoInsuficienteException | NullPointerException e) {
+            Screen.showMessage(e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -84,14 +93,15 @@ public class Main {
         return type.equals("1") ? TipoConta.CORRENTE : TipoConta.POUPANCA;
     }
 
-    public static void addConta(){
+    public static void addConta() {
         var nome = Screen.getInput("Informe seu nome:");
         var cpf = pegarCPF();
         var tipoConta = buscarTipoConta();
-        banco.abrirConta(new Cliente(nome,cpf,LocalDate.of(1989,2,15)),tipoConta);
+        banco.abrirConta(new Cliente(nome, cpf, LocalDate.of(1989, 2, 15)), tipoConta);
 
     }
-    public static String pegarCPF(){
+
+    public static String pegarCPF() {
         return Screen.getInput("Informe seu cpf: ");
     }
 }

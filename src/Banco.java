@@ -1,6 +1,5 @@
-import conta.Conta;
-import conta.ContaCorrente;
 import conta.TipoConta;
+import exceptions.NotFoundUserException;
 import pessoa.Cargo;
 import pessoa.Cliente;
 import pessoa.Gerente;
@@ -18,9 +17,9 @@ public class Banco {
         clientes = new ArrayList<>();
         gerentes = new ArrayList<>();
 
-        Gerente gerente1 = new Gerente("Diener", "1234", LocalDate.of(2000,1,1), Cargo.GERENTE_CORRENTE);
-        Gerente gerente2 = new Gerente("Pedro", "1234", LocalDate.of(2001,1,1), Cargo.GERENTE_POUPANCA);
-        Cliente cliente1 = new Cliente("Maria", "m1", LocalDate.of(2001,1,1));
+        Gerente gerente1 = new Gerente("Diener", "1234", LocalDate.of(2000, 1, 1), Cargo.GERENTE_CORRENTE);
+        Gerente gerente2 = new Gerente("Pedro", "1234", LocalDate.of(2001, 1, 1), Cargo.GERENTE_POUPANCA);
+        Cliente cliente1 = new Cliente("Maria", "m1", LocalDate.of(2001, 1, 1));
 
         clientes.add(cliente1);
         gerente1.criarConta(cliente1, TipoConta.CORRENTE);
@@ -40,76 +39,73 @@ public class Banco {
     public void verificaSaldo(String cpf, TipoConta conta) {
         var cliente = buscarCliente(cpf);
 
-        if (cliente != null) {
-            var contaCliente = cliente.getConta(conta);
-            if(contaCliente != null)
-                Screen.showMessage("Saldo: R$" + contaCliente.getSaldo());
-            else
-                Screen.showMessage("Conta não existe!");
-            }else {
-                Screen.showMessage("CPF invalido!");
-            }
+
+        var contaCliente = cliente.getConta(conta);
+        if (contaCliente != null)
+            Screen.showMessage("Saldo: R$" + contaCliente.getSaldo());
+        else
+            Screen.showMessage("Conta não existe!");
     }
+
 
     public void depositar(TipoConta tipo, String cpf, double valor) {
         var cliente = buscarCliente(cpf);
-        if (cliente != null) {
-                cliente.depositar(tipo, valor);
-            }
+
+        cliente.depositar(tipo, valor);
+
     }
 
     public void sacar(TipoConta tipo, String cpf, double valor) {
-           var cliente = buscarCliente(cpf);
-            if (cliente != null) {
-                cliente.sacar(tipo, valor);
-            }
+        var cliente = buscarCliente(cpf);
+        try {
+            cliente.sacar(tipo, valor);
+        } catch (NullPointerException e) {
+            Screen.showMessage("Não existe esta conta");
+            var opcao = Screen.getInput("Informe qual tipo de conta(1 - Corrente | 2 - Poupança): ");
+            var novoTipo = opcao.equals("1") ? TipoConta.CORRENTE : TipoConta.POUPANCA;
+            cliente.sacar(novoTipo, valor);
+        }
     }
 
-    public void fazerEmprestimo(String cpf, String nomeGerente, double valor){
-       var gerenteConta = buscarGerente(nomeGerente);
-       if(gerenteConta == null) {
-           Screen.showMessage("Não existe este gerente.");
-           return;
-       }
-       var cliente = buscarCliente(cpf);
-        if(cliente == null) {
-            Screen.showMessage("Não existe este cliente.");
-            return;
-        }
-       var numConta = cliente.getConta(TipoConta.CORRENTE).getNumConta();
-        if(numConta == null) {
+    public void fazerEmprestimo(String cpf, String nomeGerente, double valor) {
+        var gerenteConta = buscarGerente(nomeGerente);
+
+        var cliente = buscarCliente(cpf);
+        Screen.showMessage("Não existe este cliente.");
+
+        var numConta = cliente.getConta(TipoConta.CORRENTE).getNumConta();
+        if (numConta == null) {
             Screen.showMessage("Não existe o número da conta informado.");
             return;
         }
-       gerenteConta.fazerEmprestimo(numConta, valor);
+        gerenteConta.fazerEmprestimo(numConta, valor);
     }
 
     public void addConta(String cpf, TipoConta tipo) {
         var cliente = buscarCliente(cpf);
-        if(cliente == null) {
-            Screen.showMessage("Não existe este cliente.");
-            return;
-        }
-        var gerente = selecionaGerente(tipo.equals(TipoConta.CORRENTE)? Cargo.GERENTE_CORRENTE : Cargo.GERENTE_POUPANCA);
+        Screen.showMessage("Não existe este cliente.");
+
+        var gerente = selecionaGerente(tipo.equals(TipoConta.CORRENTE) ? Cargo.GERENTE_CORRENTE : Cargo.GERENTE_POUPANCA);
         gerente.criarConta(cliente, tipo);
 
     }
 
-    private Cliente buscarCliente(String cpf){
-        for(Cliente cliente : clientes) {
-            if(cliente.getCpf().equalsIgnoreCase(cpf)){
+    private Cliente buscarCliente(String cpf) throws NotFoundUserException {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCpf().equalsIgnoreCase(cpf)) {
                 return cliente;
             }
         }
-        return null;
+        throw new NotFoundUserException("Cliente");
     }
-    private Gerente buscarGerente(String nome){
-        for(Gerente g : gerentes) {
-            if(g.getNome().equalsIgnoreCase(nome)){
+
+    private Gerente buscarGerente(String nome) {
+        for (Gerente g : gerentes) {
+            if (g.getNome().equalsIgnoreCase(nome)) {
                 return g;
             }
         }
-        return null;
+        throw new NotFoundUserException("Gerente");
     }
 
     private Gerente selecionaGerente(Cargo tipoConta) {
@@ -120,7 +116,6 @@ public class Banco {
         int index = (int) (Math.random() * gerentesFiltrado.size());
 
         return gerentesFiltrado.get(index);
-
     }
 
 
